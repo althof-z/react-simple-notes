@@ -60,3 +60,58 @@ async function fetchWithToken(url, options = {}) {
   
     return { error: false };
   }
+
+  async function getUserLogged() {
+    const response = await fetchWithToken(`${BASE_URL}/users/me`);
+    const responseJson = await response.json();
+  
+    if (responseJson.status !== 'success') {
+      return { error: true, data: null };
+    }
+  
+    return { error: false, data: responseJson.data };
+  }
+
+  async function getActiveNotes() {
+    const response = await fetchWithToken(`${BASE_URL}/notes`);
+    const responseJson = await response.json();
+  
+    if (responseJson.status !== 'success') {
+      return { error: true, data: null };
+    }
+  
+    return { error: false, data: responseJson.data };
+  }
+  
+  async function getArchivedNotes() {
+    const response = await fetchWithToken(`${BASE_URL}/notes/archived`);
+    const responseJson = await response.json();
+  
+    if (responseJson.status !== 'success') {
+      return { error: true, data: null };
+    }
+  
+    return { error: false, data: responseJson.data };
+  }
+  
+  async function getNote(id) {
+    const response = await fetchWithToken(`${BASE_URL}/notes/${id}`);
+    const responseJson = await response.json();
+  
+    if (responseJson.status !== 'success') {
+      return { error: true, data: null };
+    }
+  
+    return { error: false, data: responseJson.data };
+  }
+
+  export {
+    getAccessToken,
+    putAccessToken,
+    login,
+    register,
+    getUserLogged,
+    getActiveNotes,
+    getArchivedNotes,
+    getNote,
+  };
