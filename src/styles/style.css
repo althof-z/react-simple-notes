@@ -233,3 +233,54 @@
     padding: 8px;
     cursor: pointer;
   }
+
+/* INPUT PAGE */
+.add-new-page__input {
+    margin-top: 32px;
+  }
+  
+  .add-new-page__input .add-new-page__input__title {
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+    color: var(--on-background);
+    font-family: 'Inter', sans-serif;
+    font-size: 64px;
+    font-weight: bold;
+    padding: 8px 0;
+  }
+  
+  .add-new-page__input__title::placeholder {
+    color: var(--on-background-grey);
+  }
+  
+  .add-new-page__input .add-new-page__input__body {
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+    color: var(--on-background);
+    font-family: 'Inter', sans-serif;
+    font-size: 24px;
+    padding: 8px 0;
+    min-height: 500px;
+  }
+  
+  [data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: var(--on-background-grey);
+  }
+  
+  .search-bar input {
+    margin: 16px 0;
+    font-family: 'Inter', sans-serif;
+    background-color: transparent;
+    border: 1px solid var(--on-background);
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+    color: var(--on-background);
+  }
+  
+  .search-bar input::placeholder {
+    color: var(--on-background-grey);
+  }
