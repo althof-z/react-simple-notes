@@ -72,8 +72,6 @@ async function getUserLogged() {
   return { error: false, data: responseJson.data };
 }
 
-
-
 async function getActiveNotes() {
   const response = await fetchWithToken(`${BASE_URL}/notes`);
   const responseJson = await response.json();
