@@ -11,6 +11,7 @@ import LoginPage from './pages/LoginPage';
 import Navigation from './components/Navigation';
 import LocaleContext from './contexts/LocaleContext';
 import ThemeContext from './contexts/ThemeContext';
+import ProfilePage from './pages/ProfilePage';
 import ArchivePage from './pages/ArchivePage';
 
 function NoteApp() {
@@ -122,6 +123,7 @@ function NoteApp() {
             <Route path="/" element={<HomePage />} />
             <Route path="/notes/:id" element={<DetailPage />} />
             <Route path="/input" element={<InputPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/archived" element={<ArchivePage />} />
             <Route path="*" element={<h1>Not Found</h1>} />
           </Routes>
