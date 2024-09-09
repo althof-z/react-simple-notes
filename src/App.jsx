@@ -1,35 +1,134 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect, useMemo } from 'react';
+import { Route, Routes, Link } from 'react-router-dom';
+import { HiOutlineLanguage } from 'react-icons/hi2';
+import { FaRegSun, FaMoon } from 'react-icons/fa6';
+import HomePage from './pages/HomePage';
+import DetailPage from './pages/DetailPage';
+import InputPage from './pages/InputPage';
+import { getUserLogged, putAccessToken } from './utils/api';
+import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
+import Navigation from './components/Navigation';
+import LocaleContext from './contexts/LocaleContext';
+import ThemeContext from './contexts/ThemeContext';
+import ArchivePage from './pages/ArchivePage';
 
-function App() {
-  const [count, setCount] = useState(0)
+function NoteApp() {
+  const [authed, setAuthed] = useState(null);
+  const [initializing, setInitializing] = useState(true);
+  const [locale, setLocale] = useState(localStorage.getItem('locale') || 'id');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  const toggleLocale = () => {
+    const newLocale = locale === 'id' ? 'en' : 'id';
+    localStorage.setItem('locale', newLocale);
+    setLocale(newLocale);
+  };
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    localStorage.setItem('theme', newTheme);
+    setTheme(newTheme);
+  };
+
+  const onLoginSuccess = async ({ accessToken }) => {
+    putAccessToken(accessToken);
+    const data = await getUserLogged();
+    setAuthed(data);
+  };
+
+  const onLogout = () => {
+    setAuthed(null);
+    putAccessToken('');
+  };
+
+  useEffect(() => {
+    getUserLogged().then(({ data }) => {
+      setAuthed(data);
+      setInitializing(false);
+    });
+  }, []);
+
+  const localeContextValue = useMemo(
+    () => ({ locale, toggleLocale }),
+    [locale],
+  );
+  const themeContextValue = useMemo(() => ({ theme, toggleTheme }), [theme]);
+
+  if (initializing) {
+    return null;
+  }
+
+  if (authed === null) {
+    return (
+      <ThemeContext.Provider value={themeContextValue}>
+        <LocaleContext.Provider value={localeContextValue}>
+          <div className="app-container">
+            <header>
+              <h1>
+                <Link to="/">
+                  {locale === 'id' ? 'Aplikasi Catatan' : 'Personal Notes'}
+                </Link>
+              </h1>
+              <nav className="navigation">
+                <ul>
+                  <li className="nav-item">
+                    <button
+                      type="button"
+                      onClick={toggleTheme}
+                      className="button-logout"
+                    >
+                      {theme === 'light' ? <FaRegSun /> : <FaMoon />}
+                    </button>
+                  </li>
+                  <li className="nav-item">
+                    <button
+                      type="button"
+                      aria-label="LogOut"
+                      onClick={toggleLocale}
+                      className="button-logout"
+                    >
+                      <HiOutlineLanguage />
+                    </button>
+                  </li>
+                </ul>
+              </nav>
+            </header>
+            <main>
+              <Routes>
+                <Route
+                  path="/*"
+                  element={<LoginPage loginSuccess={onLoginSuccess} />}
+                />
+                <Route path="/register" element={<RegisterPage />} />
+              </Routes>
+            </main>
+          </div>
+        </LocaleContext.Provider>
+      </ThemeContext.Provider>
+    );
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <ThemeContext.Provider value={themeContextValue}>
+      <LocaleContext.Provider value={localeContextValue}>
+        <div className="app-container">
+          <Navigation logout={onLogout} />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/notes/:id" element={<DetailPage />} />
+            <Route path="/input" element={<InputPage />} />
+            <Route path="/archived" element={<ArchivePage />} />
+            <Route path="*" element={<h1>Not Found</h1>} />
+          </Routes>
+        </div>
+      </LocaleContext.Provider>
+    </ThemeContext.Provider>
+  );
 }
 
-export default App
+export default NoteApp;
