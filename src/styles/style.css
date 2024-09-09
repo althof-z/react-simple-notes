@@ -380,6 +380,31 @@ main {
   color: var(--on-background);
 }
 
+/* PROFILE PAGE */
+.profile-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.form-group h3 {
+  margin-right: 1rem;
+  width: 100px; /* Adjust the width as needed */
+}
+
+.profile-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-left: 4rem;
+}
+
 @media screen and (min-width: 650px) {
   .notes-list {
     grid-template-columns: repeat(2, 1fr);
